@@ -1,0 +1,11 @@
+COC_Squad/figures/
+ThisLeague/figures/
+COC_Squad/*.tex
+!COC_Squad/report.tex
+ThisLeague/*.tex
+!ThisLeague/report.tex
+*.loc
+*.toc
+*.gz
+*.aux
+*.out

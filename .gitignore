@@ -1,5 +1,6 @@
-COC_Squad/figures/
-ThisLeague/figures/
+COC_Squad/*/figures/
+COC_Squad/2022/
+ThisLeague/*/figures/
 COC_Squad/*.tex
 !COC_Squad/report.tex
 ThisLeague/*.tex

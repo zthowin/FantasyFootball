@@ -1,0 +1,119 @@
+% ==
+% ||
+% || Document Class Options
+% ||
+% ==
+\documentclass[12pt,letterpaper]{article}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd,mathtools}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage[hang]{subfigure}
+\usepackage{courier}
+\usepackage[square,comma,numbers,sort&compress]{natbib}
+\usepackage[yyyymmdd,hhmmss]{datetime}
+\usepackage{booktabs}
+\usepackage{titling}
+
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+
+\captionsetup[subfigure]{labelformat=empty}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.01in}
+
+% =============================================================================
+% ||
+% ||                 B E G I N   D O C U M E N T
+% ||
+% =============================================================================
+
+
+\begin{document}
+
+\title{\textit{COC Squad Fantasy Football} \\ Report for 2023}
+
+\author{Zachariah Irwin}
+
+\clearpage\maketitle
+\titlingpage
+\clearpage
+\setcounter{page}{1}
+\tableofcontents
+
+\clearpage
+
+% =============================================================================
+% ||
+% ||               M A I N   T E X T                  
+% ||
+% ||   Large, well defined chapters are separated into different files and
+% ||   are incorporated using the \input command.  The smaller, less self-
+% ||   contained chapters, or the ones under development, are included 
+% ||   directly (for now).
+% ||
+% =============================================================================
+
+
+\section{Introduction}
+\textit{Disclaimer:} Data was scrubbed by hand from the Sleeper app. Thus, there may be some errors, but for the large part, the data set can be trusted.\\
+
+This report is organized into five sections. In Section \ref{sec:actual}, team-by-team performance of actual scoring data is analyzed. In Section \ref{sec:proj}, team-by-team performance of \textit{projected} scoring data---that is, whatever the Sleeper projected score based on a team's starting lineup prior to the MNF game---is compared to \textit{actual} scoring data and analyzed. Following this, Section \ref{sec:poss} shows team-by-team performance of \textit{possible} scoring data--that is, what a team's score would be given an optimal starting lineup--compared to \textit{actual} scoring data. Section \ref{sec:diff} provides information about matchup point differentials, i.e., by how many points a team beat or lost to another team. Lastly, Section \ref{sec:reg} includes a regression analysis to test whether or not there is correlation between total points for, point variance (from a team's average performance), and a team's record.\\
+
+\subsection{A review of box plots}
+Frequent use has been made of the box plot to understand season-long data. Figure \ref{fig:Box_plot_explained} shows a typical box plot for random data.\\
+
+The lowest quartile, or whisker, represented by the bottommost line, is a lower bound of the data set, excluding any outliers. The first quartile is the bottom edge of the box, and is a lower bound for 25\% of the data. The second quartile is the top edge of the box, and is an upper bound for 75\% of the data. The highest quartile, or whisker, represented by the topmost line, is an upper bound on 95\% of the data set.\\
+
+Generally speaking, the smaller the box and the shorter the whiskers, the more consistent that data set is. Conversely, larger boxes and longer whiskers indicate much higher variability. For Fantasy Football, a smaller box plot located above a league average for the measure of interest (which herein is denoted by a dashed black line), indicates better performance for that team in the measure of interest as compared to the rest of the league.
+\begin{figure}[htb!]
+\centering
+\includegraphics[width=0.9\textwidth]{./figures/box_plot_example.pdf}
+\caption{A fake data set illustrating components of a typical box plot. Green line indicates the median, and green box indicates the mean.}
+\label{fig:Box_plot_explained}
+\end{figure}
+
+\clearpage 
+\section{Actual scores}
+\label{sec:actual}
+\IfFileExists{score\_actual.tex}{\input{score_actual.tex} \clearpage}{}
+\section{Projected scores}
+\label{sec:proj}
+\IfFileExists{score\_projected.tex}{\input{score_projected.tex} \clearpage}{}
+\section{Possible scores}
+\label{sec:poss}
+\IfFileExists{score\_possible.tex}{\input{score_possible.tex} \clearpage}{}
+\section{Matchup point differential}
+\label{sec:diff}
+\IfFileExists{score\_differential.tex}{\input{score_differential.tex} \clearpage}{}
+
+
+\section{Regression analysis}
+\label{sec:reg}
+In this section, the entire league's data is analyzed to determine whether or not a team's record is dependent upon one of the following ``independent'' variables:
+\begin{itemize}
+  \item total points for (PF)
+  \item coefficient of variation of points for (CV), defined as $\text{CV} = \frac{\sigma_{\rm{dev}}}{\mu}$ where $\sigma_{\rm{dev}}$ is the standard deviation in PF and $\mu$ is the average PF
+  \item a combination (interaction) of PF and CV (this is the PF:CV row in the tables)
+\end{itemize}
+as well as whether or not PF is correlated with CV.\\
+
+To determine the aforementioned correlations, the \texttt{statsmodels} ordinary least-squares linear regression model was run with the dependent and independent variables as inputs. Recall that the fit of a model is given by a $R^2$ value, with higher $R^2$ generally indicating a better fit. Correlation between two variables is given by the ``t-statistic'', with larger values of $t$ indicating positive correlations, and smaller values of $t$ indicating negative correlations. For example, a large $t$-value between PF and record indicates that the dependent variable (record) is strongly correlated with the independent variable (PF). However, $t$-values mean little without a corresponding $p$-value (or probability of the ``F-statistic''). If the $p$-value is less than, e.g., 0.05, then the probability that the independent variable is correlated with the dependent variable is greater than 0.95 or 95\%. In some of the tables, there may be large $t$-values indicating strong correlation, but the corresponding $p$-values are also large, which tells us that the model cannot accurately predict strong correlations between dependent and independent variables. Evaluation of overall model fit when multiple independent variables are evaluated for correlation with a dependent variable is given by the $R^2$ value and the probability of the F-statistic.\\
+
+It is also worth mentioning that the sample size of the data is small in that it only comprises the number of teams. In larger leagues with, e.g., 100 teams, the statistics models may produce better results. But for the smaller sample sizes considered herein, the kurtosis measurement (width of the ``bell curve'') provided by \texttt{statsmodels} should be evaluated with caution.
+
+\clearpage 
+\IfFileExists{regression\_RPF.tex}{\input{regression_RPF.tex} \clearpage}{}
+\IfFileExists{regression\_RCV.tex}{\input{regression_RCV.tex} \clearpage}{}
+\IfFileExists{regression\_RPFCV.tex}{\input{regression_RPFCV.tex} \clearpage}{}
+\IfFileExists{regression\_PFCV.tex}{\input{regression_PFCV.tex} \clearpage}{}
+\IfFileExists{regression\_MRPFCV.tex}{\input{regression_MRPFCV.tex} \clearpage}{}
+
+% =============================================================================
+% ||
+% ||               E N D I N G
+% ||
+% =============================================================================
+
+\end{document}

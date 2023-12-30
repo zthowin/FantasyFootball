@@ -2,9 +2,9 @@ COC_Squad/*/figures/
 COC_Squad/2022/
 ThisLeague/*/figures/
 COC_Squad/*/*.tex
-!COC_Squad/report.tex
+!COC_Squad/*/report.tex
 ThisLeague/*/*.tex
-!ThisLeague/report.tex
+!ThisLeague/*/report.tex
 *.loc
 *.toc
 *.gz

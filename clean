@@ -1,0 +1,39 @@
+#!/bin/bash
+if [ -z ${LEAGUE+x} ] ; then echo "ERROR: LEAGUE environment variable not set." && exit 1 ; fi
+
+read -p "Enter season (year) to remove plots and auto-generated .tex files of said year: " year
+echo
+
+{
+    foundfiles=false
+    echo "The following files will be removed:"
+    echo
+    cd $LEAGUE/$year/
+    if [[ -n `find . -type f -not \( -name "report.tex" -or -name "*.xlsx" \) -print` ]]
+        then foundfiles=true && find $(pwd)/ -type f -not \( -name "report.tex" -or -name "*.xlsx" \) -print
+    fi
+} || {
+    if ! foundfiles
+        then echo "ERROR: Could not find removable files." && exit 1
+    fi
+}
+echo
+read -p "Continue? (y/n): " confirm
+if [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] ; then {
+    echo
+    echo "Removing files..."
+    {
+        cd $LEAGUE/$year/
+        find . -type f -not \( -name "report.tex" -or -name "*.xlsx" \) -delete
+    } || {
+        echo "ERROR: Could not remove files."
+        exit 1
+    }
+    echo "Files removed."
+}
+else {
+    echo
+    echo "Files not deleted."
+    exit 1
+}
+fi
